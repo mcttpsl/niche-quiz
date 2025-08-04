@@ -99,7 +99,7 @@ async function sendEmail(title, steps) {
 
   const data = { email, title, steps };
 
-  await fetch("YOUR_GOOGLE_APPS_SCRIPT_WEBHOOK_HERE", {
+  await fetch("YOUR_GOOGLE_APPS_SCRIPT_WEBHOOK_HERE", {https://script.google.com/macros/s/AKfycby8zRxa4b1UFuYY6oc-SU9b6d5m0XF0jLyMnHM1n0S7xbUd01NsM4gYoQ_g8wsgn3GZ/exec}
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
