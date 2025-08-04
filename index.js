@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
             strategyLink: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0-fXO8E-zSCfb3lW9QiFna-c9Ukqehhs__sWWy5T06OilXj0dr8X5oChk4bjstqfBnHnTz4c-M"
         };
 
-        fetch(webhookURL, {
+        fetch(webhookURL, {https://script.google.com/macros/s/AKfycby8zRxa4b1UFuYY6oc-SU9b6d5m0XF0jLyMnHM1n0S7xbUd01NsM4gYoQ_g8wsgn3GZ/exec}
             method: "POST",
             mode: "no-cors",
             body: JSON.stringify(payload),
