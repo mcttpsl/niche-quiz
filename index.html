@@ -9,21 +9,30 @@
 <body>
   <div class="quiz-container">
     <h1>KW Niche Quiz</h1>
-    <div class="progress-container">
+    <div class="progress-bar-container">
       <div id="progress-bar"></div>
     </div>
-    <div id="quiz"></div>
-    <div id="result" class="result"></div>
 
-    <div id="email-capture" class="email-capture" style="display:none;">
-      <input type="email" id="email" placeholder="Enter your email">
-      <button id="submit-email">Get My Action Plan</button>
+    <div id="quiz-content">
+      <h2 id="question-text"></h2>
+      <div id="answers"></div>
+      <button id="next-btn" class="hidden">Next</button>
+    </div>
+
+    <div id="result-container" class="hidden">
+      <h2>Your Niche Is: <span id="niche-title"></span></h2>
+      <p id="niche-description"></p>
+      <ul id="action-plan"></ul>
+      <form id="email-form">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="email" id="email" placeholder="Your Email" required>
+        <button type="submit">Email My Action Plan</button>
+      </form>
+      <p><a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0-fXO8E-zSCfb3lW9QiFna-c9Ukqehhs__sWWy5T06OilXj0dr8X5oChk4bjstqfBnHnTz4c-M" target="_blank">
+        Book Your Strategy Session with Peter Hopkins
+      </a></p>
     </div>
   </div>
-
-  <footer>
-    <p>Powered by Keller Williams Port St. Lucie</p>
-  </footer>
 
   <script src="index.js"></script>
 </body>
