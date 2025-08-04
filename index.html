@@ -1,58 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KW Niche Quiz</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="quiz-container">
-    <h1>KW Niche Quiz</h1>
-    <div id="progress-bar"><div id="progress"></div></div>
+    <h1>Discover Your KW Real Estate Niche</h1>
+    <div id="quiz"></div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <button id="next-btn">Next</button>
+  </div>
 
-    <form id="quiz-form">
-      <!-- Step 1: Name & Email -->
-      <div class="question active">
-        <h2>Welcome! Let's start with your info:</h2>
-        <input type="text" name="name" placeholder="Your Name" required />
-        <input type="email" name="email" placeholder="Your Email" required />
-      </div>
-
-      <!-- Quiz Questions -->
-      <div class="question">
-        <h2>1. How do you primarily get new leads?</h2>
-        <label><input type="radio" name="q1" value="Sphere of Influence" required /> Sphere of Influence</label>
-        <label><input type="radio" name="q1" value="Open Houses" /> Open Houses</label>
-        <label><input type="radio" name="q1" value="Online Leads" /> Online Leads</label>
-        <label><input type="radio" name="q1" value="Agent Referrals" /> Agent Referrals</label>
-      </div>
-
-      <div class="question">
-        <h2>2. Which activity do you enjoy most?</h2>
-        <label><input type="radio" name="q2" value="Networking Events" required /> Networking Events</label>
-        <label><input type="radio" name="q2" value="Marketing & Social Media" /> Marketing & Social Media</label>
-        <label><input type="radio" name="q2" value="Door Knocking & Farming" /> Door Knocking & Farming</label>
-        <label><input type="radio" name="q2" value="Hosting Events" /> Hosting Events</label>
-      </div>
-
-      <div class="question">
-        <h2>3. What’s your preferred client type?</h2>
-        <label><input type="radio" name="q3" value="First-Time Buyers" required /> First-Time Buyers</label>
-        <label><input type="radio" name="q3" value="Luxury Listings" /> Luxury Listings</label>
-        <label><input type="radio" name="q3" value="Investors" /> Investors</label>
-        <label><input type="radio" name="q3" value="Relocation Clients" /> Relocation Clients</label>
-      </div>
-
-      <!-- Submit Button -->
-      <button type="submit" id="next-btn">Next</button>
-    </form>
-
-    <div id="result-container" class="hidden">
-      <h2 id="result-title"></h2>
-      <p id="result-description"></p>
-      <ul id="action-steps"></ul>
-      <a id="strategy-link" href="#" target="_blank" class="cta-btn">Book a Strategy Session</a>
+  <div id="result-container" class="hidden">
+    <h2 id="result-title"></h2>
+    <p id="result-description"></p>
+    <ul id="action-steps"></ul>
+    <p><strong>Want to take the next step?</strong></p>
+    <a class="cta-btn" target="_blank" 
+       href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0-fXO8E-zSCfb3lW9QiFna-c9Ukqehhs__sWWy5T06OilXj0dr8X5oChk4bjstqfBnHnTz4c-M">
+       Book Your Strategy Session
+    </a>
+    <div class="email-capture">
+      <p>Enter your email to receive a full action plan:</p>
+      <input type="text" id="name" placeholder="Your Name">
+      <input type="email" id="email" placeholder="Your Email">
+      <button id="submit-btn">Send My Plan</button>
     </div>
   </div>
 
