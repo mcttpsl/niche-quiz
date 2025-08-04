@@ -1,133 +1,160 @@
+// ========== CONFIG ==========
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwZTBJKPhlZTs6ZXT8HpN178OuS5YPyPp7_WeorB63EOtTJqrSjabY0mSt0T3RP7MkE/exec";
+
+// KW-Style Questions
 const questions = [
   {
-    question: "What type of clients do you enjoy working with most?",
-    answers: ["First-time buyers", "Luxury clients", "Investors", "Sellers upgrading"]
+    question: "How would you describe your current real estate focus?",
+    options: ["Mostly Buyers", "Mostly Sellers", "Even Mix", "Just Starting Out"]
   },
   {
-    question: "Which activity excites you most?",
-    answers: ["Hosting open houses", "Networking with high-net-worth individuals", "Analyzing market trends", "Door knocking & prospecting"]
+    question: "What is your #1 source of leads?",
+    options: ["Sphere of Influence", "Open Houses", "Online Leads", "I need to build a lead source"]
   },
   {
-    question: "What’s your ideal lead source?",
-    answers: ["Social media", "Referrals", "Investment groups", "Neighborhood farming"]
+    question: "How consistent is your follow-up?",
+    options: ["Daily & Organized", "I follow up sometimes", "I struggle to stay consistent"]
   },
   {
-    question: "What is your biggest strength?",
-    answers: ["Marketing & social media", "Negotiation skills", "Data & numbers", "Local community knowledge"]
+    question: "Which system do you use the most in your business?",
+    options: ["KW Command", "Social Media", "MLS", "I don’t have a system yet"]
   },
   {
-    question: "Which KW model do you want to master?",
-    answers: ["Ignite & SOI growth", "Luxury & branding", "Investing & wealth building", "Listings & lead gen"]
+    question: "What is your biggest business goal in the next 90 days?",
+    options: ["Get More Listings", "Close More Buyers", "Build My Database", "Get Organized"]
   }
 ];
 
+// Result Outcomes
 const results = [
   {
-    title: "Your Niche: First-Time Buyer Specialist",
-    description: [
-      "Focus on education-based marketing for buyers.",
-      "Host workshops & webinars using KW resources.",
-      "Leverage social media & Command SmartPlans.",
-      "Follow up using the DTD2 system for long-term growth."
+    title: "Your Niche: Database Builder 🗂️",
+    description: "You’re ready to grow your business by mastering your database and creating a steady flow of referrals.",
+    actionSteps: [
+      "Upload and tag all your contacts into Command.",
+      "Start using the DTD2 system for weekly touches.",
+      "Set up a SmartPlan to nurture your sphere."
     ]
   },
   {
-    title: "Your Niche: Luxury Agent",
-    description: [
-      "Polish your marketing with high-end visuals and video tours.",
-      "Network in affluent neighborhoods and local events.",
-      "Build a strong social media presence with Command campaigns.",
-      "Explore KW Luxury certification for credibility."
+    title: "Your Niche: Listing Specialist 🏡",
+    description: "You thrive when helping sellers and are ready to master listing marketing and lead gen.",
+    actionSteps: [
+      "Host at least 2 open houses per month to find motivated sellers.",
+      "Use social media to feature your listings consistently.",
+      "Implement a 5-5-4 follow-up plan with seller leads."
     ]
   },
   {
-    title: "Your Niche: Investor-Friendly Agent",
-    description: [
-      "Identify ROI-driven properties and market data.",
-      "Build relationships with investment clubs.",
-      "Leverage MLS & Command for market snapshots.",
-      "Offer quarterly investment analysis to clients."
+    title: "Your Niche: Buyer Advocate 🔑",
+    description: "You love working with buyers and can win big by systemizing follow-up and showings.",
+    actionSteps: [
+      "Leverage Command to track buyer searches and follow-ups.",
+      "Create a weekly social media tip series for buyers.",
+      "Offer virtual or in-person buyer consultations regularly."
     ]
   },
   {
-    title: "Your Niche: Listing-Focused Agent",
-    description: [
-      "Farm your neighborhood using Command & DTD2.",
-      "Host consistent open houses to attract sellers.",
-      "Offer a polished listing presentation with KW tools.",
-      "Leverage Just Listed/Just Sold campaigns."
+    title: "Your Niche: New Agent Explorer 🌱",
+    description: "You’re building the foundation of your business—systems and consistency are your best friends.",
+    actionSteps: [
+      "Shadow top agents in the office and attend all trainings.",
+      "Focus on building your database and tagging contacts.",
+      "Start a simple weekly routine for lead generation."
     ]
   }
 ];
 
 let currentQuestion = 0;
-let answers = [];
+let userAnswers = [];
+let userName = "";
+let userEmail = "";
 
-const quizEl = document.getElementById("quiz");
-const nextBtn = document.getElementById("next-btn");
-const resultEl = document.getElementById("result");
-const progressBar = document.getElementById("progress-bar");
+const app = document.getElementById("quiz-app");
+
+// Load the first screen for name/email
+function showWelcomeScreen() {
+  app.innerHTML = `
+    <h2>KW Real Estate Niche Quiz</h2>
+    <p>Find your niche and get a personalized action plan for your business.</p>
+    <input id="name" placeholder="Your Name" />
+    <input id="email" placeholder="Your Email" />
+    <button onclick="startQuiz()">Start Quiz</button>
+    <div class="progress-bar"><div class="progress"></div></div>
+  `;
+}
+
+function startQuiz() {
+  userName = document.getElementById("name").value.trim();
+  userEmail = document.getElementById("email").value.trim();
+  if (!userName || !userEmail) {
+    alert("Please enter both your name and email to begin.");
+    return;
+  }
+  currentQuestion = 0;
+  userAnswers = [];
+  showQuestion();
+}
 
 function showQuestion() {
   const q = questions[currentQuestion];
-  quizEl.innerHTML = `<h2>${q.question}</h2>` + q.answers.map((a, i) =>
-    `<label><input type="radio" name="answer" value="${i}"> ${a}</label><br>`
-  ).join('');
-  nextBtn.classList.remove("hidden");
-  updateProgress();
+  app.innerHTML = `
+    <h3>Question ${currentQuestion + 1} of ${questions.length}</h3>
+    <p>${q.question}</p>
+    ${q.options.map((opt, i) => `<button onclick="selectAnswer('${opt}')">${opt}</button>`).join("<br>")}
+    <div class="progress-bar"><div class="progress" style="width:${((currentQuestion)/questions.length)*100}%"></div></div>
+  `;
 }
 
-function updateProgress() {
-  const progress = ((currentQuestion) / questions.length) * 100;
-  progressBar.style.width = `${progress}%`;
-}
-
-nextBtn.addEventListener("click", () => {
-  const selected = document.querySelector('input[name="answer"]:checked');
-  if (!selected) return alert("Please select an answer");
-  answers.push(parseInt(selected.value));
+function selectAnswer(answer) {
+  userAnswers.push(answer);
   currentQuestion++;
   if (currentQuestion < questions.length) {
     showQuestion();
   } else {
-    showResult();
+    showResults();
   }
-});
+}
 
-function showResult() {
-  progressBar.style.width = "100%";
+function calculateResult() {
+  // Simple mapping based on first answer
+  const firstAnswer = userAnswers[0];
+  if (firstAnswer.includes("Buyers")) return results[2];
+  if (firstAnswer.includes("Sellers")) return results[1];
+  if (firstAnswer.includes("Even Mix")) return results[0];
+  return results[3];
+}
 
-  const nicheIndex = answers.reduce((a,b) => a+b,0) % results.length;
-  const niche = results[nicheIndex];
+function showResults() {
+  const result = calculateResult();
 
-  quizEl.classList.add("hidden");
-  nextBtn.classList.add("hidden");
-
-  resultEl.innerHTML = `
-    <h2 class="result-title">${niche.title}</h2>
-    <div class="result-actions">
-      <ul>${niche.description.map(d => `<li>${d}</li>`).join('')}</ul>
-    </div>
-    <p>Enter your email to receive your full action plan & strategy session link:</p>
-    <input type="text" id="name" placeholder="Your Name"><br>
-    <input type="email" id="email" placeholder="Your Email"><br>
-    <button onclick="submitLead('${niche.title}', '${niche.description.join(' | ')}')">Get My Plan</button>
+  app.innerHTML = `
+    <h2>Quiz Complete 🎉</h2>
+    <h3>${result.title}</h3>
+    <p>${result.description}</p>
+    <ul>${result.actionSteps.map(step => `<li>${step}</li>`).join("")}</ul>
+    <p><a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0-fXO8E-zSCfb3lW9QiFna-c9Ukqehhs__sWWy5T06OilXj0dr8X5oChk4bjstqfBnHnTz4c-M" target="_blank">📅 Book Your Strategy Session</a></p>
+    <div class="progress-bar"><div class="progress" style="width:100%"></div></div>
   `;
-  resultEl.classList.remove("hidden");
+
+  sendToGoogleSheet(result);
 }
 
-function submitLead(niche, actions) {
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  if (!name || !email) return alert("Please enter your name and email");
-
-  fetch("YOUR_WEB_APP_URL", {https://script.google.com/macros/s/AKfycbyX3eWjAHM5CRaTulAacQYQ5JbfAcLoOdYcYrPmnmqfXL5vNZorryvwWFOFeAQl5HKS/exec
+function sendToGoogleSheet(result) {
+  fetch(WEBHOOK_URL, {
     method: "POST",
-    body: JSON.stringify({name, email, niche, actions}),
-    headers: {"Content-Type": "application/json"}
-  }).then(() => {
-    alert("Your action plan has been emailed!");
-  }).catch(err => console.error(err));
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: userName,
+      email: userEmail,
+      result: result.title,
+      answers: userAnswers
+    })
+  })
+    .then(res => res.json())
+    .then(data => console.log("Sent to Google Sheet:", data))
+    .catch(err => console.error("Error:", err));
 }
 
-showQuestion();
+// Init
+showWelcomeScreen();
