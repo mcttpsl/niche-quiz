@@ -89,7 +89,7 @@ document.getElementById('emailForm').addEventListener('submit', function(e) {
   const nicheKey = e.target.dataset.niche;
   const niche = niches[nicheKey];
 
-  fetch("YOUR_GOOGLE_SCRIPT_WEB_APP_URL", {
+  fetch("YOUR_GOOGLE_SCRIPT_WEB_APP_URL", {https://script.google.com/macros/s/AKfycbwWYVEx7pheCPz4_y_Bcvwn8zwlcILtikR2W1YaGyZtUH_PjsOW1PGC9XOyUGA23hFp/exec
     method: "POST",
     body: JSON.stringify({ name, email, niche: niche.title, description: niche.description }),
     headers: { "Content-Type": "application/json" }
