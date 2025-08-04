@@ -3,24 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KW Niche Quiz</title>
- <link rel="stylesheet" href="style.css">
+  <title>KW Real Estate Niche Quiz</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="quiz-container" id="quiz-container">
-    <h2>Find Your Real Estate Niche</h2>
-    <div id="progress-container">
+
+  <div id="quiz">
+    <h2>Discover Your Real Estate Niche</h2>
+    <p>Find out where your strengths can shine in the Treasure Coast market!</p>
+
+    <!-- Email Capture -->
+    <input type="email" id="email" placeholder="Enter your email to start" required>
+    <button id="startQuiz">Start Quiz</button>
+
+    <!-- Progress Bar -->
+    <div id="progress-bar-container" style="display:none;">
       <div id="progress-bar"></div>
     </div>
-    <div id="quiz"></div>
+
+    <!-- Quiz Questions will be injected here by JS -->
+    <div id="quiz-content"></div>
   </div>
 
-  <div class="quiz-result" id="quiz-result" style="display:none;">
-    <h2>🎉 Quiz Complete! 🎉</h2>
-    <h3 id="result-title"></h3>
-    <p id="result-description"></p>
-    <h4>Next Steps to Implement Your Niche:</h4>
-    <ul id="result-steps"></ul>
+  <!-- Result Section -->
+  <div id="quiz-result">
+    <h2>Your Niche Results</h2>
+    <p id="result-text"></p>
+
+    <h3>Next Steps:</h3>
+    <ul id="result-steps">
+      <li>Leverage your niche to focus your lead generation efforts.</li>
+      <li>Check KW Command for SmartPlans tailored to your strengths.</li>
+      <li>Book a strategy session with your leadership team to implement.</li>
+    </ul>
+
+    <button onclick="location.reload()">Retake Quiz</button>
   </div>
 
   <script src="index.js"></script>
