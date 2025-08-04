@@ -1,134 +1,154 @@
+// Niche Quiz App - KW Aligned for Treasure Coast
+// Capture email + Google Sheet + Progress Bar
 
-// Niche Quiz App with Email Capture and Google Sheets POST
+const questions = [
+  {
+    question: "Which part of real estate excites you the most?",
+    options: [
+      "Helping first-time homebuyers",
+      "Luxury waterfront properties",
+      "Investment or rental properties",
+      "Working with retirees & relocation"
+    ]
+  },
+  {
+    question: "Which Keller Williams model or system do you feel most drawn to?",
+    options: [
+      "Lead Generation (DTD2, Open Houses, Farming)",
+      "Leverage (Building a team or network)",
+      "Listings (Marketing & Exposure Strategies)",
+      "Wealth-Building (Investing or Referrals)"
+    ]
+  },
+  {
+    question: "If you had to spend a day networking, where would you go?",
+    options: [
+      "Local community events & festivals",
+      "High-end golf clubs or yacht clubs",
+      "Investor meetups or Chamber of Commerce",
+      "55+ communities or HOA socials"
+    ]
+  },
+  {
+    question: "Which type of client relationship do you prefer?",
+    options: [
+      "Guiding and educating clients step by step",
+      "Discreet, high-touch, and results-driven",
+      "Numbers-focused and strategy sessions",
+      "Friendly, neighborly, and community-driven"
+    ]
+  },
+  {
+    question: "Which of these marketing activities sounds the most fun?",
+    options: [
+      "Hosting open houses & posting on social media",
+      "Professional photos, drone videos & high-end brochures",
+      "Creating investor reports & market analysis emails",
+      "Community newsletters, local spotlights & events"
+    ]
+  }
+];
 
-document.addEventListener("DOMContentLoaded", function () {
-  const root = document.getElementById("root");
+const outcomes = [
+  {
+    name: "First-Time Buyer / SOI Niche",
+    description: "You thrive working with everyday buyers and your SOI. Focus on open houses, DTD2 touches, and education-focused marketing.",
+    matchAnswers: [0,0,0,0,0]
+  },
+  {
+    name: "Luxury & Waterfront Niche",
+    description: "You’re drawn to high-touch service and elevated marketing. Focus on professional branding, luxury networking, and curated experiences.",
+    matchAnswers: [1,1,1,1,1]
+  },
+  {
+    name: "Investor / Data-Driven Niche",
+    description: "You love strategy and ROI conversations. Focus on market reports, investor meetups, and a numbers-focused brand.",
+    matchAnswers: [2,2,2,2,2]
+  },
+  {
+    name: "Community & 55+ Niche",
+    description: "You excel at building trust in close-knit communities. Focus on hyperlocal marketing, events, and nurturing long-term relationships.",
+    matchAnswers: [3,3,3,3,3]
+  }
+];
 
-  const questions = [
-    {
-      question: "What kind of work energizes you the most?",
-      options: ["Deals, numbers, and market research", "Creating content and visuals", "Teaching and guiding others", "Networking and hosting", "Organizing systems and tools"],
-    },
-    {
-      question: "Which role best describes your style?",
-      options: ["Advisor", "Creator", "Educator", "Connector", "Organizer"],
-    },
-    {
-      question: "What type of clients excite you the most?",
-      options: ["Investors / Relocation Buyers", "Small business brands", "New agents or learners", "Local families or community groups", "Busy professionals or teams"],
-    },
-    {
-      question: "What outcome do you love delivering?",
-      options: ["Financial growth", "Brand visibility", "Learning / empowerment", "Connections & community", "Efficiency & structure"],
-    },
-    {
-      question: "Which tool would you grab first?",
-      options: ["Calculator", "Canva", "Whiteboard", "Event invite list", "Workflow builder"],
-    },
-  ];
+// Capture form elements
+let currentQuestion = 0;
+let answers = [];
+const quizContainer = document.getElementById("quiz");
+const resultContainer = document.getElementById("result");
+const progressBar = document.getElementById("progress");
 
-  const outcomes = [
-    {
-      title: "Real Estate Strategist",
-      description: "You thrive in markets, numbers, and negotiation. Ideal for luxury, investment, or relocation clients.",
-    },
-    {
-      title: "Creative Brand Builder",
-      description: "You excel at storytelling, visuals, and content creation. Perfect for lifestyle brands and marketing pros.",
-    },
-    {
-      title: "Educator & Coach",
-      description: "You love guiding others to success. Great for new agents, entrepreneurs, and those in transition.",
-    },
-    {
-      title: "Community Connector",
-      description: "You shine in people-facing roles. Ideal for networking, outreach, and neighborhood leadership.",
-    },
-    {
-      title: "Systems & Structure Pro",
-      description: "You make things run smoothly. Great for tech, backend ops, and agent support systems.",
-    },
-  ];
+function loadQuestion() {
+  quizContainer.innerHTML = "";
+  if (currentQuestion < questions.length) {
+    const q = questions[currentQuestion];
 
-  let step = 0;
-  let score = [0, 0, 0, 0, 0];
+    // Question text
+    const questionEl = document.createElement("h2");
+    questionEl.textContent = q.question;
+    quizContainer.appendChild(questionEl);
 
-  function renderQuestion() {
-    const q = questions[step];
-    root.innerHTML = '<h2 style="color:#222;font-size:22px">Question ' + (step + 1) + ' of ' + questions.length + '</h2>' +
-      '<div style="height: 8px; width: 100%; background: #eee; border-radius: 4px; overflow: hidden; margin-bottom: 1rem;">' +
-      '<div style="height: 100%; width: ' + ((100 / questions.length) * step) + '%; background: #008080;"></div>' +
-      '</div>' +
-      '<p style="font-size:18px;color:#333">' + q.question + '</p>' +
-      '<div id="options" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;"></div>';
-
-    const optionsDiv = document.getElementById("options");
-    q.options.forEach((opt, i) => {
+    // Options as buttons
+    q.options.forEach((opt, index) => {
       const btn = document.createElement("button");
       btn.textContent = opt;
-      btn.style.padding = "12px";
-      btn.style.border = "1px solid #008080";
-      btn.style.borderRadius = "8px";
-      btn.style.background = "#f0fdfa";
-      btn.style.color = "#008080";
-      btn.style.cursor = "pointer";
-      btn.style.width = "100%";
-      btn.style.maxWidth = "500px";
-      btn.style.margin = "0 auto";
+      btn.classList.add("option-btn");
       btn.onclick = () => {
-        score[i] += 1;
-        step++;
-        if (step < questions.length) {
-          renderQuestion();
-        } else {
-          renderEmailForm();
-        }
+        answers.push(index);
+        currentQuestion++;
+        updateProgress();
+        loadQuestion();
       };
-      optionsDiv.appendChild(btn);
+      quizContainer.appendChild(btn);
     });
+  } else {
+    showEmailCapture();
   }
+}
 
-  function renderEmailForm() {
-    root.innerHTML = '<h2>Almost done! 🎉</h2>' +
-      '<p>Enter your name and email to see your result:</p>' +
-      '<input type="text" id="name" placeholder="Your Name" style="margin-top:1rem;padding:10px;width:100%;max-width:400px;border-radius:6px;border:1px solid #ccc"/><br/>' +
-      '<input type="email" id="email" placeholder="Your Email" style="margin-top:1rem;padding:10px;width:100%;max-width:400px;border-radius:6px;border:1px solid #ccc"/><br/>' +
-      '<button id="seeResult" style="margin-top:1.5rem;padding:12px 24px;border:none;border-radius:6px;background:#008080;color:#fff;cursor:pointer">See My Result</button>';
+function updateProgress() {
+  progressBar.style.width = `${(currentQuestion / questions.length) * 100}%`;
+}
 
-    document.getElementById("seeResult").onclick = () => {
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const maxIndex = score.indexOf(Math.max(...score));
-      const result = outcomes[maxIndex];
+function showEmailCapture() {
+  quizContainer.innerHTML = `
+    <h2>Almost done! Enter your email to see your niche:</h2>
+    <input type="email" id="emailInput" placeholder="Your email">
+    <button id="submitEmail">See My Niche</button>
+  `;
 
-      if (!name || !email) {
-        alert("Please enter both name and email.");
-        return;
-      }
+  document.getElementById("submitEmail").onclick = () => {
+    const email = document.getElementById("emailInput").value;
+    showResult(email);
+  };
+}
 
-      fetch("https://script.google.com/macros/s/AKfycbyl8Ar5tx4TSsfRhqkFe_PdN_Qm9xPYC8VK8_thbaLk0zq5q72xyK_lYMrwkWRF-vzX/exec", {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          resultTitle: result.title,
-          resultDescription: result.description
-        })
-      });
+function showResult(email) {
+  const tally = answers.reduce((a,b)=>a+b,0)/answers.length;
+  let niche;
+  if (tally < 0.75) niche = outcomes[0];
+  else if (tally < 1.5) niche = outcomes[1];
+  else if (tally < 2.5) niche = outcomes[2];
+  else niche = outcomes[3];
 
-      showResult(result);
-    };
-  }
+  quizContainer.innerHTML = `
+    <h2>Your Recommended Niche:</h2>
+    <h3>${niche.name}</h3>
+    <p>${niche.description}</p>
+  `;
 
-  function showResult(result) {
-    root.innerHTML = '<h2>Your Niche: ' + result.title + '</h2>' +
-      '<p>' + result.description + '</p>' +
-      '<a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0-fXO8E-zSCfb3lW9QiFna-c9Ukqehhs__sWWy5T06OilXj0dr8X5oChk4bjstqfBnHnTz4c-M" target="_blank">' +
-      '<button style="margin-top:1.5rem;padding:12px 24px;border:none;border-radius:6px;background:#008080;color:#fff;cursor:pointer">Book a Strategy Session</button>' +
-      '</a>';
-  }
+  sendToGoogleSheet(email, niche.name);
+}
 
-  renderQuestion();
-});
+function sendToGoogleSheet(email, niche) {
+  fetch("YOUR_GOOGLE_SCRIPT_URL", {
+    method: "POST",
+    body: JSON.stringify({email, niche}),
+    headers: {"Content-Type": "application/json"}
+  }).then(res => console.log("Submitted to Google Sheet"));
+}
+
+// Start quiz
+loadQuestion();
+updateProgress();
