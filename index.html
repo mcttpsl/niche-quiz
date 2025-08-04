@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Niche Quiz</title>
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="index.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KW Niche Quiz</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="root">
-    <h1>Niche Quiz is loading...</h1>
-  </div>
+    <div class="quiz-container">
+        <h1>Find Your KW Niche</h1>
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+        <div id="quiz"></div>
+        <button id="next-btn" class="hidden">Next</button>
+        <div id="result" class="hidden"></div>
+        <div id="email-capture" class="hidden">
+            <p>Enter your email to see your result:</p>
+            <input type="email" id="email" placeholder="Your email">
+            <button id="submit-email">Submit</button>
+        </div>
+    </div>
+    <script src="index.js"></script>
 </body>
 </html>
