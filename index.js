@@ -24,19 +24,47 @@ const quizData = [
 const resultsData = [
   {
     type: "First-Time Buyer Specialist",
-    description: "You thrive helping new buyers! Focus on education, first-time buyer programs, and building strong lender relationships."
+    description: `
+      You thrive helping new buyers navigate their first purchase!  
+      **Action Steps:**  
+      - Create a first-time buyer guide using Command.  
+      - Host monthly homebuyer workshops or webinars.  
+      - Partner with lenders for first-time buyer programs (like Hometown Heroes).  
+      - Set up SmartPlans to nurture leads automatically.
+    `
   },
   {
     type: "Luxury Agent",
-    description: "You shine in high-end markets. Build a polished brand, attend networking events, and offer white-glove service."
+    description: `
+      You shine in high-end markets where personal branding and relationships matter.  
+      **Action Steps:**  
+      - Build a polished, KW-branded luxury listing presentation.  
+      - Attend high-end networking and charity events.  
+      - Showcase listings with professional staging, photos, and video tours.  
+      - Use Command to track luxury referrals and repeat clients.
+    `
   },
   {
     type: "Investor Specialist",
-    description: "You’re numbers-driven! Focus on cash-flow properties, market stats, and creating repeat investor clients."
+    description: `
+      You’re numbers-driven and love the strategy behind real estate investments.  
+      **Action Steps:**  
+      - Learn to analyze ROI, cap rates, and cash flow using MLS & Command reports.  
+      - Create a recurring SmartPlan for investors to share new opportunities.  
+      - Network with property managers and contractors for added value.  
+      - Use market stats in your social media to attract repeat investors.
+    `
   },
   {
     type: "Downsizing & 55+ Specialist",
-    description: "You excel with life transitions. Partner with retirement communities, moving services, and create a smooth selling experience."
+    description: `
+      You excel with clients going through major life transitions.  
+      **Action Steps:**  
+      - Build relationships with 55+ communities and retirement planners.  
+      - Offer a concierge move service including decluttering and movers.  
+      - Use Command tags to track past clients for referrals.  
+      - Host downsizing workshops and highlight senior-friendly features in listings.
+    `
   }
 ];
 
@@ -100,15 +128,16 @@ function submitEmail() {
 
   const result = resultsData[topAnswer];
   resultContainer.innerHTML = `
-    <h2>Quiz Complete!</h2>
-    <h3>Your Niche: ${result.type}</h3>
+    <h2>🎉 Quiz Complete!</h2>
+    <h3>Your Real Estate Niche Is:</h3>
+    <h2 style="color:#c41e3a">${result.type}</h2>
     <p>${result.description}</p>
   `;
   resultContainer.classList.remove('hidden');
   quizContainer.innerHTML = "";
 
   // Send to Google Sheets
-  fetch("YOUR_GOOGLE_SHEET_WEBHOOK_URL", {https://script.google.com/macros/s/AKfycby8zRxa4b1UFuYY6oc-SU9b6d5m0XF0jLyMnHM1n0S7xbUd01NsM4gYoQ_g8wsgn3GZ/exec}
+  fetch("YOUR_GOOGLE_SHEET_WEBHOOK_URL", {
     method: "POST",
     body: JSON.stringify({ email: email, result: result.type }),
     headers: { "Content-Type": "application/json" }
