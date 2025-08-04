@@ -118,7 +118,7 @@ function showResult() {
   document.getElementById("submit-btn").addEventListener("click", ()=>{
     const name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
-    fetch("YOUR_WEB_APP_URL_HERE", {
+    fetch("YOUR_WEB_APP_URL_HERE", {https://script.google.com/macros/s/AKfycbzbVQ940nUBZHV06tBGBosJC3HPRdSJRzpykNK9e_l1nX_nSWpmBDAX5W12t93ZM_G1/exec
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
