@@ -7,37 +7,13 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <div id="quiz">
-    <h2>Discover Your Real Estate Niche</h2>
-    <p>Find out where your strengths can shine in the Treasure Coast market!</p>
-
-    <!-- Email Capture -->
-    <input type="email" id="email" placeholder="Enter your email to start" required>
-    <button id="startQuiz">Start Quiz</button>
-
-    <!-- Progress Bar -->
-    <div id="progress-bar-container" style="display:none;">
+  <div class="quiz-container">
+    <h1>Find Your Real Estate Niche</h1>
+    <div id="progress-container">
       <div id="progress-bar"></div>
     </div>
-
-    <!-- Quiz Questions will be injected here by JS -->
-    <div id="quiz-content"></div>
-  </div>
-
-  <!-- Result Section -->
-  <div id="quiz-result">
-    <h2>Your Niche Results</h2>
-    <p id="result-text"></p>
-
-    <h3>Next Steps:</h3>
-    <ul id="result-steps">
-      <li>Leverage your niche to focus your lead generation efforts.</li>
-      <li>Check KW Command for SmartPlans tailored to your strengths.</li>
-      <li>Book a strategy session with your leadership team to implement.</li>
-    </ul>
-
-    <button onclick="location.reload()">Retake Quiz</button>
+    <div id="quiz"></div>
+    <div id="result" class="hidden"></div>
   </div>
 
   <script src="index.js"></script>
