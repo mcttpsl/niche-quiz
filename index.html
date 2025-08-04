@@ -1,37 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KW Niche Quiz</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="quiz-container">
-    <h1>KW Niche Quiz</h1>
-    <div class="progress-bar">
-      <div id="progress"></div>
-    </div>
+const questions = [
+  {
+    question: "Which type of client do you enjoy most?",
+    answers: ["First-Time Buyers", "Luxury Clients", "Investors", "Relocations"]
+  },
+  {
+    question: "Which activity excites you the most?",
+    answers: ["Hosting Open Houses", "Negotiating Deals", "Analyzing Markets", "Networking Events"]
+  },
+  {
+    question: "What motivates you most in real estate?",
+    answers: ["Helping Families", "Big Closings", "Building Wealth", "Exploring New Markets"]
+  }
+];
 
-    <div id="quiz"></div>
+const niches = {
+  "First-Time Buyers": {
+    title: "First-Time Buyer Specialist",
+    description: "You thrive helping new buyers enter the market! Focus on education, open houses, and nurturing leads."
+  },
+  "Luxury Clients": {
+    title: "Luxury Homes Specialist",
+    description: "You excel in high-end markets! Build relationships, leverage premium marketing, and network strategically."
+  },
+  "Investors": {
+    title: "Investor Ally",
+    description: "You love numbers and deals! Focus on ROI analysis, market trends, and property portfolios."
+  },
+  "Relocations": {
+    title: "Relocation Expert",
+    description: "You shine helping clients transition smoothly! Master community tours, virtual consultations, and partnerships."
+  }
+};
 
-    <div id="result" class="hidden">
-      <h2>Your Niche Is:</h2>
-      <h3 id="niche-title"></h3>
-      <p id="niche-description"></p>
+let currentQuestion = 0;
+let selectedAnswers = [];
 
-      <form id="emailForm">
-        <input type="text" id="name" placeholder="Your Name" required>
-        <input type="email" id="email" placeholder="Your Email" required>
-        <button type="submit">Email My Action Plan</button>
-      </form>
+const quizContainer = document.getElementById('quiz');
+const resultContainer = document.getElementById('result');
+const progressBar = document.getElementById('progress');
 
-      <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0-fXO8E-zSCfb3lW9QiFna-c9Ukqehhs__sWWy5T06OilXj0dr8X5oChk4bjstqfBnHnTz4c-M" 
-         class="strategy-link" target="_blank">
-        Book Your Strategy Session with Peter Hopkins
-      </a>
-    </div>
-  </div>
-  <script src="index.js"></script>
-</body>
-</html>
+function showQuestion() {
+  if (currentQuestion >= questions.length) {
+    showResult();
+    return;
+  }
+
+  const q = questions[currentQuestion];
+  quizContainer.innerHTML = `
+    <h2>${q.question}</h2>
+    ${q.answers.map(a => `<button onclick="selectAnswer('${a}')">${a}</button>`).join('')}
+  `;
+
+  updateProgress();
+}
+
+function selectAnswer(answer) {
+  selectedAnswers.push(answer);
+  currentQuestion++;
+  showQuestion();
+}
+
+function updateProgress() {
+  const progress = ((currentQuestion) / questions.length) * 100;
+  progressBar.style.width = progress + "%";
+}
+
+function showResult() {
+  quizContainer.classList.add('hidden');
+  resultContainer.classList.remove('hidden');
+
+  const nicheCount = {};
+  selectedAnswers.forEach(a => nicheCount[a] = (nicheCount[a] || 0) + 1);
+  const topNiche = Object.keys(nicheCount).reduce((a, b) => nicheCount[a] > nicheCount[b] ? a : b);
+
+  document.getElementById('niche-title').innerText = niches[topNiche].title;
+  document.getElementById('niche-description').innerText = niches[topNiche].description;
+
+  progressBar.style.width = "100%";
+}
+
+// Email form simulation
+document.getElementById('emailForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  alert("Your action plan will be emailed to you!");
+});
+
+showQuestion();
