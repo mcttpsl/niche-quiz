@@ -1,42 +1,70 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f6f6f6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .quiz-container {
-    width: 500px;
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    text-align: center;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+h1 {
+  color: #b40101;
+  text-align: center;
+}
+
+.question {
+  display: none;
+  margin-top: 20px;
+}
+
+.question.active {
+  display: block;
 }
 
 #progress-bar {
-    width: 0;
-    height: 8px;
-    background: red;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    transition: width 0.3s ease-in-out;
+  width: 100%;
+  height: 15px;
+  background: #ddd;
+  border-radius: 7px;
+  margin-bottom: 20px;
+  overflow: hidden;
 }
 
-.option-btn {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-    background: #e31837;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+#progress {
+  height: 100%;
+  width: 0;
+  background: #b40101;
+  transition: width 0.3s;
 }
 
-.option-btn:hover {
-    background: #c21630;
+button, .cta-btn {
+  background: #b40101;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+}
+
+.hidden {
+  display: none;
+}
+
+#action-steps {
+  margin: 15px 0;
+  padding-left: 20px;
 }
