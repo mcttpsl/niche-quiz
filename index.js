@@ -1,112 +1,176 @@
-const quizData = [
+// ===================== CONFIG =====================
+const webhookURL = "YOUR_GOOGLE_APPS_SCRIPT_WEBHOOK_HERE";
+
+// Questions and answers (sample placeholders)
+const questions = [
   {
-    question: "Which type of client do you enjoy working with most?",
-    answers: ["First-Time Buyers", "Luxury Buyers", "Investors", "Sellers"]
+    question: "Which type of client excites you most?",
+    answers: ["First-Time Buyers", "Luxury Buyers", "Investors", "Relocation Clients"]
   },
   {
-    question: "Which part of the business excites you?",
-    answers: ["Open Houses", "High-End Showings", "Analyzing Deals", "Marketing Listings"]
+    question: "Which activity do you enjoy most?",
+    answers: ["Hosting Open Houses", "Networking with High-Net-Worth Clients", "Analyzing Deals", "Helping Families Relocate"]
   },
   {
-    question: "What’s your preferred pace?",
-    answers: ["Fast & Fun", "High-Touch & Exclusive", "Numbers & Strategy", "Steady & Strategic"]
+    question: "Which marketing method do you prefer?",
+    answers: ["Social Media", "Exclusive Events", "ROI-Driven Ads", "Community Outreach"]
+  },
+  {
+    question: "Which KW model do you align with?",
+    answers: ["Ignite", "Luxury", "Commercial", "Referral & Relocation"]
+  },
+  {
+    question: "Your ideal day in real estate includes:",
+    answers: ["Meeting New Buyers", "Touring High-End Homes", "Crunching Investment Numbers", "Helping Families Settle In"]
   }
 ];
 
+// Results mapping
 const results = [
   {
     title: "First-Time Buyer Specialist",
-    desc: [
-      "Host engaging open houses to attract new buyers.",
-      "Leverage social media to educate first-time buyers.",
-      "Use KW Command to follow up quickly and convert leads."
+    description: "You thrive helping new buyers enter the market!",
+    steps: [
+      "Host 2+ open houses per month targeting first-time buyers.",
+      "Create a buyer guide in Command and send to your SOI.",
+      "Leverage social media for buyer tips and testimonials."
     ]
   },
   {
-    title: "Luxury Home Specialist",
-    desc: [
-      "Invest in professional photography & video tours.",
-      "Build strong relationships with high-end vendors.",
-      "Offer white-glove client experiences."
+    title: "Luxury Specialist",
+    description: "You excel with high-net-worth clients and premium properties.",
+    steps: [
+      "Tour local luxury properties weekly to build market knowledge.",
+      "Network with local professionals and attend luxury events.",
+      "Use Command to create high-end listing presentations."
     ]
   },
   {
     title: "Investor Ally",
-    desc: [
-      "Analyze properties for ROI and cash flow.",
-      "Leverage market trends for investor insights.",
-      "Build repeat business with portfolio clients."
+    description: "You love helping clients grow wealth through real estate investments.",
+    steps: [
+      "Analyze 2-3 deals weekly and share insights with prospects.",
+      "Offer workshops on investment strategies using KW resources.",
+      "Build relationships with property managers and contractors."
     ]
   },
   {
-    title: "Listing Power Agent",
-    desc: [
-      "Focus on neighborhood farming and local dominance.",
-      "Master your listing presentation for high conversion.",
-      "Leverage KW Command to market listings automatically."
+    title: "Relocation & Referral Pro",
+    description: "You thrive connecting families and clients to new communities.",
+    steps: [
+      "Partner with KW relocation and referral networks.",
+      "Create a relocation guide with local attractions and services.",
+      "Stay active in neighborhood social media groups."
     ]
   }
 ];
 
 let currentQuestion = 0;
-let score = [0,0,0,0];
+let userAnswers = [];
+let userEmail = "";
 
-const quizEl = document.getElementById("quiz");
-const resultEl = document.getElementById("result");
-const progressEl = document.querySelector(".progress");
+// DOM Elements
+const container = document.querySelector(".quiz-container");
+const questionEl = document.querySelector("#question");
+const answersEl = document.querySelector("#answers");
+const progressBar = document.querySelector("#progress-bar");
+const resultContainer = document.querySelector(".result-container");
 
-function loadQuestion() {
-  if (currentQuestion >= quizData.length) {
-    showResult();
+// Display question
+function showQuestion() {
+  if (!questions[currentQuestion]) return showResult();
+
+  questionEl.innerHTML = questions[currentQuestion].question;
+  answersEl.innerHTML = "";
+
+  questions[currentQuestion].answers.forEach((answer) => {
+    const btn = document.createElement("button");
+    btn.innerText = answer;
+    btn.onclick = () => selectAnswer(answer);
+    answersEl.appendChild(btn);
+  });
+
+  updateProgressBar();
+}
+
+function selectAnswer(answer) {
+  userAnswers.push(answer);
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    showQuestion();
+  } else {
+    askEmail();
+  }
+}
+
+function askEmail() {
+  container.innerHTML = `
+    <h2>Almost done! Enter your email to get your full action plan:</h2>
+    <input type="email" id="emailInput" placeholder="you@example.com" required>
+    <button onclick="finishQuiz()">Get My Results</button>
+  `;
+  updateProgressBar(100);
+}
+
+function finishQuiz() {
+  const emailInput = document.querySelector("#emailInput");
+  userEmail = emailInput.value.trim();
+
+  if (!userEmail) {
+    alert("Please enter your email to receive your results.");
     return;
   }
 
-  const q = quizData[currentQuestion];
-  quizEl.innerHTML = `
-    <h2>${q.question}</h2>
-    ${q.answers.map((ans, i) => `<button onclick="selectAnswer(${i})">${ans}</button>`).join("")}
-  `;
-
-  progressEl.style.width = `${(currentQuestion / quizData.length) * 100}%`;
-}
-
-function selectAnswer(i) {
-  score[i]++;
-  currentQuestion++;
-  loadQuestion();
+  showResult();
+  sendToGoogleSheet();
 }
 
 function showResult() {
-  progressEl.style.width = "100%";
-  const maxIndex = score.indexOf(Math.max(...score));
-  const res = results[maxIndex];
+  // Determine result based on first answer (simple mapping)
+  let resultIndex = 0;
+  if (userAnswers[0].includes("Luxury")) resultIndex = 1;
+  else if (userAnswers[0].includes("Investors")) resultIndex = 2;
+  else if (userAnswers[0].includes("Relocation")) resultIndex = 3;
 
-  quizEl.classList.add("hidden");
-  resultEl.classList.remove("hidden");
-  resultEl.innerHTML = `
-    <h2>Your Niche Is: ${res.title}</h2>
-    <ul>${res.desc.map(step => `<li>${step}</li>`).join("")}</ul>
-    <p>Want your full action plan emailed to you?</p>
-    <input type="email" id="email" placeholder="Enter your email"/>
-    <button onclick="sendEmail('${res.title}', ${JSON.stringify(res.desc)})">Send My Action Plan</button>
-    <p><a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0-fXO8E-zSCfb3lW9QiFna-c9Ukqehhs__sWWy5T06OilXj0dr8X5oChk4bjstqfBnHnTz4c-M" target="_blank">Book a Strategy Session with Peter Hopkins</a></p>
+  const selectedResult = results[resultIndex];
+
+  container.innerHTML = `
+    <h2>Your Niche is: ${selectedResult.title}</h2>
+    <p>${selectedResult.description}</p>
+    <ul>${selectedResult.steps.map(step => `<li>${step}</li>`).join("")}</ul>
+    <p style="color:green; font-weight:bold;">✅ Your full action plan has been emailed to you!</p>
   `;
+
+  updateProgressBar(100);
 }
 
-async function sendEmail(title, steps) {
-  const email = document.getElementById("email").value;
-  if (!email) return alert("Please enter an email!");
+function sendToGoogleSheet() {
+  // Determine result based on first answer
+  let resultIndex = 0;
+  if (userAnswers[0].includes("Luxury")) resultIndex = 1;
+  else if (userAnswers[0].includes("Investors")) resultIndex = 2;
+  else if (userAnswers[0].includes("Relocation")) resultIndex = 3;
 
-  const data = { email, title, steps };
+  const selectedResult = results[resultIndex];
 
-  await fetch("YOUR_GOOGLE_APPS_SCRIPT_WEBHOOK_HERE", {https://script.google.com/macros/s/AKfycbwQkEn8ns7IFO5FsZMwyzEAYr8S92_gZY7VqOer0o9PUH_wHLx92DOuHQ2xSTs4wRVV/exec
+  fetch(webhookURL, {https://script.google.com/macros/s/AKfycbwQkEn8ns7IFO5FsZMwyzEAYr8S92_gZY7VqOer0o9PUH_wHLx92DOuHQ2xSTs4wRVV/exec
     method: "POST",
-    mode: "no-cors",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
-
-  alert("Your full action plan has been emailed to you!");
+    body: JSON.stringify({
+      email: userEmail,
+      title: selectedResult.title,
+      steps: selectedResult.steps
+    })
+  })
+  .then(res => res.json())
+  .then(data => console.log("Webhook success:", data))
+  .catch(err => console.error("Webhook error:", err));
 }
 
-loadQuestion();
+function updateProgressBar(forceValue) {
+  let percent = forceValue ?? ((currentQuestion) / questions.length) * 100;
+  progressBar.style.width = percent + "%";
+}
+
+// Start quiz
+showQuestion();
