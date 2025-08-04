@@ -136,7 +136,7 @@ submitEmailBtn.addEventListener("click", () => {
   const email = emailInput.value;
   if (!email) return alert("Please enter an email.");
 
-  fetch("YOUR_WEBHOOK_URL_HERE", {https://script.google.com/macros/s/AKfycbxm8dnhO5QknzfnR5MP0BSdJuonMwfg4i99Vd4jJ6UzzQtylcvwlE3iDjG2m-zZDro2/exec
+  fetch("YOUR_WEBHOOK_URL_HERE", {https://script.google.com/macros/s/AKfycbwss_S_ftSf-iUd070tRaCR54oiJ5LD7kyznPFZLKjPzCaGp_-htrYNmaqyn6qYGDI5/exec
     method: "POST",
     body: JSON.stringify({
       email: email,
