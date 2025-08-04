@@ -3,19 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Keller Williams Niche Quiz</title>
+  <title>KW Niche Quiz</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="quiz-container">
-    <h1>Find Your Real Estate Niche</h1>
+    <h1>KW Niche Quiz</h1>
     <div class="progress-container">
       <div id="progress-bar"></div>
     </div>
-    <div id="question"></div>
-    <div id="answers" class="answers"></div>
+    <div id="quiz"></div>
+    <div id="result" class="result"></div>
+
+    <div id="email-capture" class="email-capture" style="display:none;">
+      <input type="email" id="email" placeholder="Enter your email">
+      <button id="submit-email">Get My Action Plan</button>
+    </div>
   </div>
-  <div class="result-container"></div>
+
+  <footer>
+    <p>Powered by Keller Williams Port St. Lucie</p>
+  </footer>
 
   <script src="index.js"></script>
 </body>
