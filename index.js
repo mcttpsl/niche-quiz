@@ -1,159 +1,144 @@
-// KW PSL Niche Quiz - Fresh Version
-// Handles questions, progress, results, and Google Sheet email webhook
+const WEBHOOK_URL = "PASTE_YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE";
 
+// Sample quiz
 const questions = [
   {
-    question: "Which type of clients do you most enjoy working with?",
-    answers: ["First-time buyers", "Luxury buyers", "Investors", "Vacation/second-home buyers"]
+    question: "Which client type excites you the most?",
+    answers: ["First-time buyers", "Luxury buyers", "Investors", "Vacation home buyers"],
+    scores: [0,1,2,3]
   },
   {
-    question: "Which property type excites you most?",
-    answers: ["Single-family homes", "Condos/Townhomes", "Multi-family", "Waterfront/Unique properties"]
+    question: "Which type of property do you enjoy marketing?",
+    answers: ["Starter homes", "High-end estates", "Multi-family / rentals", "Waterfront or resort homes"],
+    scores: [0,1,2,3]
   },
   {
-    question: "Which lead generation activity do you prefer?",
-    answers: ["Open houses & events", "Social media/online marketing", "Sphere & referrals", "Investors & networking"]
-  },
-  {
-    question: "Which area of the Treasure Coast do you want to focus on?",
-    answers: ["Port St. Lucie", "Stuart/Palm City", "Fort Pierce/Hutchinson Island", "All of the above"]
-  },
-  {
-    question: "Which KW system do you want to master for lead gen?",
-    answers: ["Command SmartPlans", "Social Media Campaigns", "Open House System", "Agent-to-Agent Referrals"]
+    question: "Which part of the process do you love?",
+    answers: ["Guiding and educating new clients", "Showcasing lifestyle and luxury", "Running the numbers", "Highlighting community lifestyle"],
+    scores: [0,1,2,3]
   }
 ];
 
-// Niche outcomes
-const niches = {
-  "First-time buyers": {
+const results = [
+  {
     title: "First-Time Buyer Specialist",
-    description: [
-      "Create a SmartPlan for nurturing buyers new to the process.",
-      "Host first-time buyer workshops or webinars monthly.",
-      "Leverage social media to share 'how-to-buy' content.",
-      "Build lender partnerships to simplify pre-approvals.",
-      "Book a strategy session to create your step-by-step plan."
+    description: "You thrive helping new buyers enter the market!",
+    actionPlan: [
+      "Host monthly first-time buyer seminars.",
+      "Create educational social media content.",
+      "Use KW Command SmartPlans for nurturing leads."
     ]
   },
-  "Luxury buyers": {
-    title: "Luxury & Lifestyle Expert",
-    description: [
-      "Focus on waterfront, golf, or gated communities.",
-      "Attend luxury open houses and preview high-end listings.",
-      "Build a professional Instagram or LinkedIn presence.",
-      "Network with luxury vendors and stagers.",
-      "Book a strategy session to elevate your market presence."
+  {
+    title: "Luxury Home Expert",
+    description: "You shine in marketing and selling high-end homes.",
+    actionPlan: [
+      "Join KW Luxury for exclusive tools.",
+      "Network at local luxury events.",
+      "Focus on high-quality listing photos & videos."
     ]
   },
-  "Investors": {
-    title: "Investment & ROI Advisor",
-    description: [
-      "Learn local cap rates and cash flow calculations.",
-      "Attend networking events with local investors.",
-      "Leverage KW Command to tag and follow investor contacts.",
-      "Share market reports and potential ROI opportunities.",
-      "Book a strategy session to structure your investor plan."
+  {
+    title: "Investor Specialist",
+    description: "You excel at helping investors find opportunities.",
+    actionPlan: [
+      "Learn to run cash flow and ROI analyses.",
+      "Connect with local investor groups.",
+      "Leverage KW Command to track repeat clients."
     ]
   },
-  "Vacation/second-home buyers": {
-    title: "Vacation & Lifestyle Market Pro",
-    description: [
-      "Highlight waterfront and seasonal properties.",
-      "Learn STR (short-term rental) rules and HOA guidelines.",
-      "Market listings to out-of-town buyers via social media.",
-      "Create relocation SmartPlans with lifestyle guides.",
-      "Book a strategy session to maximize seasonal lead flow."
+  {
+    title: "Vacation & Lifestyle Specialist",
+    description: "You love helping buyers find their dream getaways.",
+    actionPlan: [
+      "Highlight lifestyle-focused marketing in listings.",
+      "Develop social media content showcasing the area.",
+      "Partner with local tourism boards."
     ]
   }
-};
-
-// Elements
-const quizContainer = document.getElementById("quiz");
-const progressBar = document.getElementById("progress-bar");
-const resultContainer = document.getElementById("result");
-const emailCapture = document.getElementById("email-capture");
-const emailInput = document.getElementById("email");
-const submitEmailBtn = document.getElementById("submit-email");
+];
 
 let currentQuestion = 0;
-let selectedAnswers = [];
-let userNiche = "";
+let scores = [0,0,0,0];
 
-function startQuiz() {
-  showQuestion();
-  updateProgress();
-}
+const questionText = document.getElementById("question-text");
+const answersDiv = document.getElementById("answers");
+const nextBtn = document.getElementById("next-btn");
+const progressBar = document.getElementById("progress-bar");
 
-function showQuestion() {
+function loadQuestion() {
   const q = questions[currentQuestion];
-  quizContainer.innerHTML = `
-    <h3>${q.question}</h3>
-    ${q.answers.map((a, i) => 
-      `<button class="answer-btn" onclick="selectAnswer('${a}')">${a}</button>`
-    ).join("")}
-  `;
+  questionText.textContent = q.question;
+  answersDiv.innerHTML = "";
+  q.answers.forEach((answer, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = answer;
+    btn.onclick = () => selectAnswer(q.scores[i]);
+    answersDiv.appendChild(btn);
+  });
 }
 
-function selectAnswer(answer) {
-  selectedAnswers.push(answer);
+function selectAnswer(scoreIndex) {
+  scores[scoreIndex]++;
+  nextBtn.classList.remove("hidden");
+}
+
+nextBtn.addEventListener("click", () => {
   currentQuestion++;
-
-  if (currentQuestion < questions.length) {
-    updateProgress();
-    showQuestion();
+  updateProgress();
+  if(currentQuestion < questions.length){
+    loadQuestion();
+    nextBtn.classList.add("hidden");
   } else {
-    showResults();
+    showResult();
   }
-}
+});
 
 function updateProgress() {
   const progress = ((currentQuestion) / questions.length) * 100;
-  progressBar.style.width = `${progress}%`;
+  progressBar.style.width = progress + "%";
 }
 
-function showResults() {
-  // Determine niche based on first answer
-  userNiche = niches[selectedAnswers[0]];
-  progressBar.style.width = "100%";
+function showResult() {
+  document.getElementById("quiz-content").classList.add("hidden");
+  document.getElementById("result-container").classList.remove("hidden");
 
-  resultContainer.innerHTML = `
-    <h2>🎉 Quiz Complete!</h2>
-    <h3>Your niche is: ${userNiche.title}</h3>
-    <p>Here’s your recommended action plan:</p>
-    <ul>
-      ${userNiche.description.map(step => `<li>${step}</li>`).join("")}
-    </ul>
-    <p>Enter your email to receive your full plan & strategy session link:</p>
-  `;
+  const bestIndex = scores.indexOf(Math.max(...scores));
+  const result = results[bestIndex];
 
-  quizContainer.style.display = "none";
-  emailCapture.style.display = "block";
+  document.getElementById("niche-title").textContent = result.title;
+  document.getElementById("niche-description").textContent = result.description;
+  
+  const actionList = document.getElementById("action-plan");
+  actionList.innerHTML = "";
+  result.actionPlan.forEach(step => {
+    const li = document.createElement("li");
+    li.textContent = step;
+    actionList.appendChild(li);
+  });
 }
 
-// Email capture and send to Google Apps Script
-submitEmailBtn.addEventListener("click", () => {
-  const email = emailInput.value;
-  if (!email) return alert("Please enter an email.");
+// Email submit
+document.getElementById("email-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const bestIndex = scores.indexOf(Math.max(...scores));
+  const result = results[bestIndex];
 
-  fetch("YOUR_WEBHOOK_URL_HERE", {https://script.google.com/macros/s/AKfycbwss_S_ftSf-iUd070tRaCR54oiJ5LD7kyznPFZLKjPzCaGp_-htrYNmaqyn6qYGDI5/exec
+  fetch(WEBHOOK_URL, {https://script.google.com/macros/s/AKfycbxuUji6S2R7eUf63EhXSJtWYZnxmL3-Ntaza7J5BLwOWQAyqe4Z-ag6bndUHlU3oQ-4/exec
     method: "POST",
     body: JSON.stringify({
-      email: email,
-      niche: userNiche.title,
-      answers: selectedAnswers
-    }),
-    headers: {
-      "Content-Type": "application/json"
-    }
-  }).then(res => res.json()).then(data => {
-    emailCapture.innerHTML = `
-      <h3>✅ Email sent!</h3>
-      <p>Check your inbox for your full action plan and strategy session link.</p>
-    `;
-  }).catch(() => {
-    alert("Error sending email. Please try again.");
+      name,
+      email,
+      result: result.title,
+      actionPlan: result.actionPlan.map(s => `<li>${s}</li>`).join("")
+    })
+  }).then(() => {
+    alert("Your action plan has been emailed!");
   });
 });
 
-startQuiz();
+// Load first question
+loadQuestion();
+updateProgress();
