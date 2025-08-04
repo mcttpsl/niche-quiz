@@ -1,104 +1,63 @@
 body {
-  font-family: 'Arial', sans-serif;
-  background: #f7f7f7;
-  margin: 0;
-  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
+  align-items: center;
+  height: 100vh;
 }
 
 .quiz-container {
   background: #fff;
-  padding: 30px;
-  margin-top: 40px;
-  border-radius: 12px;
-  max-width: 600px;
-  width: 90%;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 20px;
+  width: 400px;
+  border-radius: 10px;
   text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 h1 {
-  color: #b40101; /* KW Red */
-  margin-bottom: 20px;
-}
-
-.progress-container {
-  width: 100%;
-  background: #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-
-#progress-bar {
-  height: 12px;
-  width: 0%;
-  background: #b40101;
-  transition: width 0.3s;
-}
-
-#quiz h3 {
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.answer-btn {
-  display: block;
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  background: #f0f0f0;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.answer-btn:hover {
-  background: #b40101;
-  color: #fff;
-}
-
-.result h2 {
   color: #b40101;
 }
 
-.result ul {
-  text-align: left;
+.progress-bar-container {
+  width: 100%;
+  height: 10px;
+  background: #ddd;
+  border-radius: 5px;
+  margin: 15px 0;
+}
+
+#progress-bar {
+  height: 10px;
+  width: 0%;
+  background: #b40101;
+  border-radius: 5px;
+}
+
+button {
   margin-top: 15px;
-}
-
-.email-capture {
-  margin-top: 20px;
-}
-
-#email {
-  padding: 10px;
-  width: 70%;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  margin-right: 5px;
-}
-
-#submit-email {
-  padding: 10px 15px;
+  padding: 10px 20px;
   background: #b40101;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-#submit-email:hover {
-  background: #8c0101;
+button.hidden {
+  display: none;
 }
 
-footer {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 0.8rem;
-  color: #777;
+#result-container ul {
+  text-align: left;
+  margin: 15px 0;
+}
+
+input[type="text"], input[type="email"] {
+  width: 90%;
+  margin: 5px 0;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
