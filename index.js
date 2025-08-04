@@ -126,7 +126,7 @@ document.getElementById("email-form").addEventListener("submit", e => {
   const bestIndex = scores.indexOf(Math.max(...scores));
   const result = results[bestIndex];
 
-  fetch(WEBHOOK_URL, {https://script.google.com/macros/s/AKfycbxuUji6S2R7eUf63EhXSJtWYZnxmL3-Ntaza7J5BLwOWQAyqe4Z-ag6bndUHlU3oQ-4/exec
+  fetch(WEBHOOK_URL, {https://script.google.com/macros/s/AKfycbxqnnP-qBerr50Vv07_TrCNSquP0Qp2sdK_yncSioZOKj65JSfTCiol_ugDgLEXFtgc/exec
     method: "POST",
     body: JSON.stringify({
       name,
