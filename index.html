@@ -1,15 +1,40 @@
-<div class="quiz-container">
-    <h2>Find Your Real Estate Niche</h2>
-    <div class="progress-container">
-        <div id="progress-bar"></div>
-    </div>
+.quiz-container {
+    width: 500px;
+    margin: 40px auto;
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
 
-    <!-- Quiz questions will appear here -->
-    <div id="quiz"></div>
+.progress-container {
+    width: 100%;
+    background-color: #eee;
+    border-radius: 8px;
+    height: 10px;
+    margin: 20px 0;
+}
 
-    <!-- Email capture appears after quiz -->
-    <div id="email-capture"></div>
+#progress-bar {
+    height: 10px;
+    width: 0;
+    background-color: #c00;
+    border-radius: 8px;
+    transition: width 0.3s ease;
+}
 
-    <!-- Result appears after email submit -->
-    <div id="result"></div>
-</div>
+.option-btn {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    background: #c00;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.option-btn:hover {
+    background: #900;
+}
