@@ -10,54 +10,58 @@ body {
 .quiz-container {
   background: #fff;
   padding: 20px;
-  width: 400px;
   border-radius: 10px;
+  width: 400px;
   text-align: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
 h1 {
-  color: #b40101;
+  color: #b70000;
 }
 
-.progress-bar-container {
-  width: 100%;
-  height: 10px;
-  background: #ddd;
+.progress-bar {
+  background: #eee;
+  height: 8px;
   border-radius: 5px;
-  margin: 15px 0;
+  margin: 20px 0;
 }
 
-#progress-bar {
-  height: 10px;
+#progress {
+  height: 8px;
+  background: #b70000;
   width: 0%;
-  background: #b40101;
   border-radius: 5px;
 }
 
 button {
-  margin-top: 15px;
-  padding: 10px 20px;
-  background: #b40101;
-  color: white;
+  margin-top: 10px;
+  padding: 10px 15px;
+  background: #b70000;
+  color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-button.hidden {
+button:hover {
+  background: #d10000;
+}
+
+.hidden {
   display: none;
 }
 
-#result-container ul {
-  text-align: left;
-  margin: 15px 0;
+input {
+  display: block;
+  margin: 10px auto;
+  padding: 8px;
+  width: 80%;
 }
 
-input[type="text"], input[type="email"] {
-  width: 90%;
-  margin: 5px 0;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+.strategy-link {
+  display: block;
+  margin-top: 15px;
+  color: #3333cc;
+  text-decoration: underline;
 }
