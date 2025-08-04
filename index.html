@@ -3,31 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KW Niche Quiz</title>
+  <title>KW Real Estate Niche Quiz</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="quiz-container">
     <h1>Discover Your KW Real Estate Niche</h1>
+    <p class="subtitle">Answer a few questions to find your niche and get your custom action plan!</p>
+
     <div id="quiz"></div>
+
     <div class="progress-bar">
       <div class="progress-fill" id="progress-fill"></div>
     </div>
-    <button id="next-btn">Next</button>
-  </div>
 
-  <div class="result-container hidden" id="result-container">
-    <h2 id="result-title"></h2>
-    <p id="result-description"></p>
-    <ul id="action-steps"></ul>
-    <input type="text" id="name" placeholder="Your Name">
-    <input type="email" id="email" placeholder="Your Email">
-    <button id="submit-btn">Email My Action Plan</button>
-    <p>
-      <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0-fXO8E-zSCfb3lW9QiFna-c9Ukqehhs__sWWy5T06OilXj0dr8X5oChk4bjstqfBnHnTz4c-M" target="_blank">
-        Book Your Strategy Session with Peter Hopkins
-      </a>
-    </p>
+    <div class="button-container">
+      <button id="next-btn">Next</button>
+    </div>
+
+    <div id="result-container" class="hidden">
+      <h2 id="result-title"></h2>
+      <p id="result-description"></p>
+      <ul id="action-steps"></ul>
+      <p class="cta">
+        Book your free 1:1 Strategy Session with Peter Hopkins: 
+        <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0-fXO8E-zSCfb3lW9QiFna-c9Ukqehhs__sWWy5T06OilXj0dr8X5oChk4bjstqfBnHnTz4c-M" target="_blank">
+          Click Here
+        </a>
+      </p>
+      <p id="email-confirmation" class="hidden">Your full action plan has been sent to your email!</p>
+    </div>
   </div>
 
   <script src="index.js"></script>
