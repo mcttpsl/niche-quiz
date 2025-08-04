@@ -1,3 +1,4 @@
+alert("JS Loaded!");
 // ==================== QUIZ CONFIGURATION ====================
 const quizData = [
     {
