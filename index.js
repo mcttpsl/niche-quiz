@@ -79,7 +79,7 @@ submitEmail.addEventListener('click', () => {
     emailCapture.classList.add('hidden');
 
     // Send to Google Sheets
-    fetch("YOUR_WEBHOOK_URL", {
+    fetch("YOUR_WEBHOOK_URL", {https://script.google.com/macros/s/AKfycby8zRxa4b1UFuYY6oc-SU9b6d5m0XF0jLyMnHM1n0S7xbUd01NsM4gYoQ_g8wsgn3GZ/exec}
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, result: result.niche })
