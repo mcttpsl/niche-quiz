@@ -1,154 +1,143 @@
-// Niche Quiz App - KW Aligned for Treasure Coast
-// Capture email + Google Sheet + Progress Bar
+// ==============================
+// KW Treasure Coast Niche Quiz
+// ==============================
 
-const questions = [
+// QUIZ QUESTIONS
+const quizData = [
   {
-    question: "Which part of real estate excites you the most?",
-    options: [
-      "Helping first-time homebuyers",
-      "Luxury waterfront properties",
-      "Investment or rental properties",
-      "Working with retirees & relocation"
+    question: "Which type of client excites you most?",
+    answers: [
+      { text: "First-time homebuyers", niche: "First-Time Buyers" },
+      { text: "Luxury buyers & sellers", niche: "Luxury Homes" },
+      { text: "Investors & flippers", niche: "Investment Properties" },
+      { text: "Vacation or seasonal buyers", niche: "Vacation / 2nd Homes" },
+      { text: "Relocations & out-of-state buyers", niche: "Relocation Clients" }
     ]
   },
   {
-    question: "Which Keller Williams model or system do you feel most drawn to?",
-    options: [
-      "Lead Generation (DTD2, Open Houses, Farming)",
-      "Leverage (Building a team or network)",
-      "Listings (Marketing & Exposure Strategies)",
-      "Wealth-Building (Investing or Referrals)"
+    question: "Which property type are you most drawn to?",
+    answers: [
+      { text: "Starter homes / condos", niche: "First-Time Buyers" },
+      { text: "High-end waterfront or golf community", niche: "Luxury Homes" },
+      { text: "Multi-family or income-producing", niche: "Investment Properties" },
+      { text: "Beach or seasonal rentals", niche: "Vacation / 2nd Homes" },
+      { text: "Suburban single-family", niche: "Relocation Clients" }
     ]
   },
   {
-    question: "If you had to spend a day networking, where would you go?",
-    options: [
-      "Local community events & festivals",
-      "High-end golf clubs or yacht clubs",
-      "Investor meetups or Chamber of Commerce",
-      "55+ communities or HOA socials"
+    question: "What type of conversations energize you?",
+    answers: [
+      { text: "Helping clients envision their first home", niche: "First-Time Buyers" },
+      { text: "Showcasing high-end features & lifestyle", niche: "Luxury Homes" },
+      { text: "Crunching numbers & ROI", niche: "Investment Properties" },
+      { text: "Highlighting local attractions & seasonal perks", niche: "Vacation / 2nd Homes" },
+      { text: "Guiding families through a big move", niche: "Relocation Clients" }
     ]
   },
   {
-    question: "Which type of client relationship do you prefer?",
-    options: [
-      "Guiding and educating clients step by step",
-      "Discreet, high-touch, and results-driven",
-      "Numbers-focused and strategy sessions",
-      "Friendly, neighborly, and community-driven"
+    question: "Which marketing activities do you enjoy most?",
+    answers: [
+      { text: "Social media tips & homebuyer education", niche: "First-Time Buyers" },
+      { text: "Luxury branding & professional photography", niche: "Luxury Homes" },
+      { text: "Before-and-after flips & market stats", niche: "Investment Properties" },
+      { text: "Community highlights & beachy lifestyle posts", niche: "Vacation / 2nd Homes" },
+      { text: "Neighborhood tours & moving tips", niche: "Relocation Clients" }
     ]
   },
   {
-    question: "Which of these marketing activities sounds the most fun?",
-    options: [
-      "Hosting open houses & posting on social media",
-      "Professional photos, drone videos & high-end brochures",
-      "Creating investor reports & market analysis emails",
-      "Community newsletters, local spotlights & events"
+    question: "Which KW system or activity excites you most?",
+    answers: [
+      { text: "Hosting first-time buyer seminars", niche: "First-Time Buyers" },
+      { text: "Luxury open houses & KW Luxury tools", niche: "Luxury Homes" },
+      { text: "Using Command for investor follow-ups", niche: "Investment Properties" },
+      { text: "Creating seasonal referral campaigns", niche: "Vacation / 2nd Homes" },
+      { text: "Building a relocation agent referral network", niche: "Relocation Clients" }
     ]
   }
 ];
 
-const outcomes = [
-  {
-    name: "First-Time Buyer / SOI Niche",
-    description: "You thrive working with everyday buyers and your SOI. Focus on open houses, DTD2 touches, and education-focused marketing.",
-    matchAnswers: [0,0,0,0,0]
-  },
-  {
-    name: "Luxury & Waterfront Niche",
-    description: "You’re drawn to high-touch service and elevated marketing. Focus on professional branding, luxury networking, and curated experiences.",
-    matchAnswers: [1,1,1,1,1]
-  },
-  {
-    name: "Investor / Data-Driven Niche",
-    description: "You love strategy and ROI conversations. Focus on market reports, investor meetups, and a numbers-focused brand.",
-    matchAnswers: [2,2,2,2,2]
-  },
-  {
-    name: "Community & 55+ Niche",
-    description: "You excel at building trust in close-knit communities. Focus on hyperlocal marketing, events, and nurturing long-term relationships.",
-    matchAnswers: [3,3,3,3,3]
-  }
-];
-
-// Capture form elements
+// QUIZ STATE
 let currentQuestion = 0;
-let answers = [];
-const quizContainer = document.getElementById("quiz");
-const resultContainer = document.getElementById("result");
-const progressBar = document.getElementById("progress");
+let selectedNiches = {};
+let userEmail = "";
 
-function loadQuestion() {
-  quizContainer.innerHTML = "";
-  if (currentQuestion < questions.length) {
-    const q = questions[currentQuestion];
+// DOM ELEMENTS
+const quizContainer = document.getElementById('quiz');
+const resultContainer = document.getElementById('result');
+const progressBar = document.getElementById('progress-bar');
 
-    // Question text
-    const questionEl = document.createElement("h2");
-    questionEl.textContent = q.question;
-    quizContainer.appendChild(questionEl);
+// RENDER QUESTION
+function showQuestion() {
+  const questionData = quizData[currentQuestion];
+  quizContainer.innerHTML = `
+    <h3>${questionData.question}</h3>
+    ${questionData.answers.map((answer, idx) => `
+      <button class="answer-btn" onclick="selectAnswer('${answer.niche}')">${answer.text}</button>
+    `).join('')}
+  `;
+  updateProgressBar();
+}
 
-    // Options as buttons
-    q.options.forEach((opt, index) => {
-      const btn = document.createElement("button");
-      btn.textContent = opt;
-      btn.classList.add("option-btn");
-      btn.onclick = () => {
-        answers.push(index);
-        currentQuestion++;
-        updateProgress();
-        loadQuestion();
-      };
-      quizContainer.appendChild(btn);
-    });
+// HANDLE ANSWER
+function selectAnswer(niche) {
+  selectedNiches[niche] = (selectedNiches[niche] || 0) + 1;
+
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    showQuestion();
   } else {
     showEmailCapture();
   }
 }
 
-function updateProgress() {
-  progressBar.style.width = `${(currentQuestion / questions.length) * 100}%`;
-}
-
+// SHOW EMAIL CAPTURE
 function showEmailCapture() {
   quizContainer.innerHTML = `
-    <h2>Almost done! Enter your email to see your niche:</h2>
-    <input type="email" id="emailInput" placeholder="Your email">
-    <button id="submitEmail">See My Niche</button>
+    <h3>Enter your email to see your recommended niche:</h3>
+    <input type="email" id="email" placeholder="Your email" required />
+    <button onclick="submitQuiz()">See My Niche!</button>
   `;
-
-  document.getElementById("submitEmail").onclick = () => {
-    const email = document.getElementById("emailInput").value;
-    showResult(email);
-  };
+  updateProgressBar(true);
 }
 
-function showResult(email) {
-  const tally = answers.reduce((a,b)=>a+b,0)/answers.length;
-  let niche;
-  if (tally < 0.75) niche = outcomes[0];
-  else if (tally < 1.5) niche = outcomes[1];
-  else if (tally < 2.5) niche = outcomes[2];
-  else niche = outcomes[3];
-
-  quizContainer.innerHTML = `
-    <h2>Your Recommended Niche:</h2>
-    <h3>${niche.name}</h3>
-    <p>${niche.description}</p>
-  `;
-
-  sendToGoogleSheet(email, niche.name);
+// CALCULATE NICHE RESULT
+function calculateNicheResult() {
+  let maxCount = 0;
+  let bestNiche = "";
+  for (let niche in selectedNiches) {
+    if (selectedNiches[niche] > maxCount) {
+      maxCount = selectedNiches[niche];
+      bestNiche = niche;
+    }
+  }
+  return bestNiche || "General Real Estate";
 }
 
-function sendToGoogleSheet(email, niche) {
-  fetch("YOUR_GOOGLE_SCRIPT_URL", {
+// SUBMIT QUIZ
+function submitQuiz() {
+  userEmail = document.getElementById('email').value;
+  const niche = calculateNicheResult();
+
+  // Show result
+  resultContainer.innerHTML = `<h2>Your Recommended Niche: ${niche}</h2>
+                               <p>We’ll follow up with KW tools to help you dominate this niche.</p>`;
+
+  // Send to Google Sheets
+  fetch("YOUR_GOOGLE_SCRIPT_URL_HERE", {
     method: "POST",
-    body: JSON.stringify({email, niche}),
-    headers: {"Content-Type": "application/json"}
-  }).then(res => console.log("Submitted to Google Sheet"));
+    body: JSON.stringify({ email: userEmail, niche: niche }),
+    headers: { "Content-Type": "application/json" }
+  })
+  .then(res => res.json())
+  .then(data => console.log("Google Sheet Response:", data))
+  .catch(err => console.error("Error sending to Google Sheets:", err));
 }
 
-// Start quiz
-loadQuestion();
-updateProgress();
+// PROGRESS BAR
+function updateProgressBar(complete = false) {
+  const percent = complete ? 100 : ((currentQuestion) / quizData.length) * 100;
+  progressBar.style.width = percent + "%";
+}
+
+// START QUIZ
+showQuestion();
