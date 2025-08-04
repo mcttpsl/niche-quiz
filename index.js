@@ -115,7 +115,7 @@ function showResults() {
   actionStepsList.innerHTML = niche.actionSteps.map(step => `<li>${step}</li>`).join('');
 
   // Send results to Google Apps Script
-  fetch("YOUR_WEB_APP_URL_HERE", {
+  fetch("YOUR_WEB_APP_URL_HERE", {https://script.google.com/macros/s/AKfycbzbVQ940nUBZHV06tBGBosJC3HPRdSJRzpykNK9e_l1nX_nSWpmBDAX5W12t93ZM_G1/exec
     method: "POST",
     body: JSON.stringify({
       name: prompt("Enter your name to receive your full action plan:"),
