@@ -1,98 +1,64 @@
-const WEBHOOK_URL = "PASTE_YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE";
-
-// Sample quiz
 const questions = [
   {
-    question: "Which client type excites you the most?",
-    answers: ["First-time buyers", "Luxury buyers", "Investors", "Vacation home buyers"],
-    scores: [0,1,2,3]
+    question: "Which type of client do you enjoy most?",
+    answers: ["First-Time Buyers", "Luxury Clients", "Investors", "Relocations"]
   },
   {
-    question: "Which type of property do you enjoy marketing?",
-    answers: ["Starter homes", "High-end estates", "Multi-family / rentals", "Waterfront or resort homes"],
-    scores: [0,1,2,3]
+    question: "Which activity excites you the most?",
+    answers: ["Hosting Open Houses", "Negotiating Deals", "Analyzing Markets", "Networking Events"]
   },
   {
-    question: "Which part of the process do you love?",
-    answers: ["Guiding and educating new clients", "Showcasing lifestyle and luxury", "Running the numbers", "Highlighting community lifestyle"],
-    scores: [0,1,2,3]
+    question: "What motivates you most in real estate?",
+    answers: ["Helping Families", "Big Closings", "Building Wealth", "Exploring New Markets"]
   }
 ];
 
-const results = [
-  {
+const niches = {
+  "First-Time Buyers": {
     title: "First-Time Buyer Specialist",
-    description: "You thrive helping new buyers enter the market!",
-    actionPlan: [
-      "Host monthly first-time buyer seminars.",
-      "Create educational social media content.",
-      "Use KW Command SmartPlans for nurturing leads."
-    ]
+    description: "You thrive helping new buyers enter the market! Focus on education, open houses, and nurturing leads."
   },
-  {
-    title: "Luxury Home Expert",
-    description: "You shine in marketing and selling high-end homes.",
-    actionPlan: [
-      "Join KW Luxury for exclusive tools.",
-      "Network at local luxury events.",
-      "Focus on high-quality listing photos & videos."
-    ]
+  "Luxury Clients": {
+    title: "Luxury Homes Specialist",
+    description: "You excel in high-end markets! Build relationships, leverage premium marketing, and network strategically."
   },
-  {
-    title: "Investor Specialist",
-    description: "You excel at helping investors find opportunities.",
-    actionPlan: [
-      "Learn to run cash flow and ROI analyses.",
-      "Connect with local investor groups.",
-      "Leverage KW Command to track repeat clients."
-    ]
+  "Investors": {
+    title: "Investor Ally",
+    description: "You love numbers and deals! Focus on ROI analysis, market trends, and property portfolios."
   },
-  {
-    title: "Vacation & Lifestyle Specialist",
-    description: "You love helping buyers find their dream getaways.",
-    actionPlan: [
-      "Highlight lifestyle-focused marketing in listings.",
-      "Develop social media content showcasing the area.",
-      "Partner with local tourism boards."
-    ]
+  "Relocations": {
+    title: "Relocation Expert",
+    description: "You shine helping clients transition smoothly! Master community tours, virtual consultations, and partnerships."
   }
-];
+};
 
 let currentQuestion = 0;
-let scores = [0,0,0,0];
+let selectedAnswers = [];
 
-const questionText = document.getElementById("question-text");
-const answersDiv = document.getElementById("answers");
-const nextBtn = document.getElementById("next-btn");
-const progressBar = document.getElementById("progress-bar");
+const quizContainer = document.getElementById('quiz');
+const resultContainer = document.getElementById('result');
+const progressBar = document.getElementById('progress');
 
-function loadQuestion() {
-  const q = questions[currentQuestion];
-  questionText.textContent = q.question;
-  answersDiv.innerHTML = "";
-  q.answers.forEach((answer, i) => {
-    const btn = document.createElement("button");
-    btn.textContent = answer;
-    btn.onclick = () => selectAnswer(q.scores[i]);
-    answersDiv.appendChild(btn);
-  });
-}
-
-function selectAnswer(scoreIndex) {
-  scores[scoreIndex]++;
-  nextBtn.classList.remove("hidden");
-}
-
-nextBtn.addEventListener("click", () => {
-  currentQuestion++;
-  updateProgress();
-  if(currentQuestion < questions.length){
-    loadQuestion();
-    nextBtn.classList.add("hidden");
-  } else {
+function showQuestion() {
+  if (currentQuestion >= questions.length) {
     showResult();
+    return;
   }
-});
+
+  const q = questions[currentQuestion];
+  quizContainer.innerHTML = `
+    <h2>${q.question}</h2>
+    ${q.answers.map(a => `<button onclick="selectAnswer('${a}')">${a}</button>`).join('')}
+  `;
+
+  updateProgress();
+}
+
+function selectAnswer(answer) {
+  selectedAnswers.push(answer);
+  currentQuestion++;
+  showQuestion();
+}
 
 function updateProgress() {
   const progress = ((currentQuestion) / questions.length) * 100;
@@ -100,45 +66,36 @@ function updateProgress() {
 }
 
 function showResult() {
-  document.getElementById("quiz-content").classList.add("hidden");
-  document.getElementById("result-container").classList.remove("hidden");
+  quizContainer.classList.add('hidden');
+  resultContainer.classList.remove('hidden');
 
-  const bestIndex = scores.indexOf(Math.max(...scores));
-  const result = results[bestIndex];
+  const nicheCount = {};
+  selectedAnswers.forEach(a => nicheCount[a] = (nicheCount[a] || 0) + 1);
+  const topNiche = Object.keys(nicheCount).reduce((a, b) => nicheCount[a] > nicheCount[b] ? a : b);
 
-  document.getElementById("niche-title").textContent = result.title;
-  document.getElementById("niche-description").textContent = result.description;
-  
-  const actionList = document.getElementById("action-plan");
-  actionList.innerHTML = "";
-  result.actionPlan.forEach(step => {
-    const li = document.createElement("li");
-    li.textContent = step;
-    actionList.appendChild(li);
-  });
+  document.getElementById('niche-title').innerText = niches[topNiche].title;
+  document.getElementById('niche-description').innerText = niches[topNiche].description;
+
+  progressBar.style.width = "100%";
+
+  // Attach niche result to form for sending
+  document.getElementById('emailForm').dataset.niche = topNiche;
 }
 
-// Email submit
-document.getElementById("email-form").addEventListener("submit", e => {
+document.getElementById('emailForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const bestIndex = scores.indexOf(Math.max(...scores));
-  const result = results[bestIndex];
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const nicheKey = e.target.dataset.niche;
+  const niche = niches[nicheKey];
 
-  fetch(WEBHOOK_URL, {https://script.google.com/macros/s/AKfycbxqnnP-qBerr50Vv07_TrCNSquP0Qp2sdK_yncSioZOKj65JSfTCiol_ugDgLEXFtgc/exec
+  fetch("YOUR_GOOGLE_SCRIPT_WEB_APP_URL", {
     method: "POST",
-    body: JSON.stringify({
-      name,
-      email,
-      result: result.title,
-      actionPlan: result.actionPlan.map(s => `<li>${s}</li>`).join("")
-    })
+    body: JSON.stringify({ name, email, niche: niche.title, description: niche.description }),
+    headers: { "Content-Type": "application/json" }
   }).then(() => {
-    alert("Your action plan has been emailed!");
+    alert("Your action plan has been emailed to you!");
   });
 });
 
-// Load first question
-loadQuestion();
-updateProgress();
+showQuestion();
